@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  background-color: black;
+}
+span, button{
+  color:white;
+}
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+img{
+  height: fit-content !important;
+}
+select>option{
+  background-color: transparent !important;
+}
+.Collapsible__trigger{
+  width: 100%;
+  display: inline-block;
+  padding: 16px 0;
+  transition: transform 300ms cubic-bezier(0, 1, 0, 1);
+}
+.supply-card{
+  fill: rgba(147, 121, 98, 0.04);
+
+stroke-width: 1px;
+stroke: var(--Ghost-Button-Stroke, #57461B);
+
+backdrop-filter: blur(75px);
+}
+.rs-input-number-btn-group-vertical{
+  display: none;
+}
+.rs-input{
+  background-color: transparent;
+  outline: none;
+  max-width: 100%;
+}
