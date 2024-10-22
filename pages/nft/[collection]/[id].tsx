@@ -14,7 +14,10 @@ export default function NFTDetail() {
     const { collection, id } = query;
     if (collection && id) {
       // Helper function to get the best listing price of an NFT
-      const fetchBestListing = async (slug: string, identifier: string) => {
+      const fetchBestListing: any = async (
+        slug: string,
+        identifier: string
+      ) => {
         try {
           const listingResponse = await fetch(
             `https://api.opensea.io/api/v2/listings/collection/${slug}/nfts/${id}/best`,

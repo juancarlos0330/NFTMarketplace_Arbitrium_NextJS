@@ -93,7 +93,7 @@ export default function Collection() {
   };
 
   // Helper function to get the best listing price of an NFT
-  const fetchBestListing = async (identifier: string) => {
+  const fetchBestListing: any = async (identifier: string) => {
     try {
       const listingResponse = await fetch(
         `https://api.opensea.io/api/v2/listings/collection/${index}/nfts/${identifier}/best`,
