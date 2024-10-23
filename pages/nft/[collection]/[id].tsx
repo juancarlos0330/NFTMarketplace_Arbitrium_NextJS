@@ -95,7 +95,7 @@ export default function NFTDetail() {
         await window.ethereum.request({ method: "eth_requestAccounts" });
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
-        const priceInWei = ethers.parseEther(nftData.bestPrice);
+        const priceInWei = ethers.parseEther(nftData.bestPrice.bestPrice);
         const contract = getWriteContract(signer);
 
         console.log("NFT Data:", nftData);
