@@ -61,6 +61,7 @@ export default function Collection() {
         return 0;
       });
       setNftData((prevData: any) => [...prevData, ...sortedNftData]);
+
       setLoadingMore(false);
     } catch (error) {
       console.error("Failed to fetch NFT data:", error);
@@ -96,7 +97,7 @@ export default function Collection() {
   const fetchBestListing: any = async (identifier: string) => {
     try {
       const listingResponse = await fetch(
-        `https://api.opensea.io/api/v2/listings/collection/${index}/nfts/${identifier}/best`,
+        `https://api.opensea.io/api/v2/offers/collection/${index}/nfts/${identifier}/best`,
         {
           method: "GET",
           headers: {
@@ -114,9 +115,16 @@ export default function Collection() {
       }
       const listingData = await listingResponse.json();
       // Convert the price from Wei to Ether using ethers.js
-      const priceInWei = listingData.price?.current?.value;
+      const priceDecimal = listingData.price?.decimal;
+      const priceInWei = listingData.price?.value;
 
-      return priceInWei ? ethers.formatUnits(priceInWei.toString(), 18) : ""; // Format to ETH
+      return {
+        bestPrice: priceInWei
+          ? ethers.formatUnits(priceInWei.toString(), priceDecimal)
+          : "",
+        priceCurrency: listingData.price?.currency,
+        priceDecimal,
+      }; // Format to ETH
     } catch (error) {
       console.error("Failed to fetch best listing:", error);
       return "N/A";
@@ -235,10 +243,11 @@ export default function Collection() {
                   {/* Display the Best Listing Price */}
                   <span className="block text-sm font-bold text-yellow-400">
                     {nft.bestPrice &&
-                      nft.bestPrice !== "N/A" &&
+                      nft.bestPrice.bestPrice !== "N/A" &&
                       "Best Price: " +
-                        parseFloat(nft.bestPrice).toFixed(2) +
-                        " ETH"}
+                        Number(parseFloat(nft.bestPrice.bestPrice).toFixed(6)) +
+                        " " +
+                        nft.bestPrice.priceCurrency}
                   </span>
                 </div>
               </Link>

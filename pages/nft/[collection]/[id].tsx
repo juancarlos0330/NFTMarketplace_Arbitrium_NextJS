@@ -20,7 +20,7 @@ export default function NFTDetail() {
       ) => {
         try {
           const listingResponse = await fetch(
-            `https://api.opensea.io/api/v2/listings/collection/${slug}/nfts/${id}/best`,
+            `https://api.opensea.io/api/v2/offers/collection/${slug}/nfts/${id}/best`,
             {
               method: "GET",
               headers: {
@@ -38,11 +38,16 @@ export default function NFTDetail() {
           }
           const listingData = await listingResponse.json();
           // Convert the price from Wei to Ether using ethers.js
-          const priceInWei = listingData.price?.current?.value;
+          const priceDecimal = listingData.price?.decimal;
+          const priceInWei = listingData.price?.value;
 
-          return priceInWei
-            ? ethers.formatUnits(priceInWei.toString(), 18)
-            : ""; // Format to ETH
+          return {
+            bestPrice: priceInWei
+              ? ethers.formatUnits(priceInWei.toString(), priceDecimal)
+              : "",
+            priceCurrency: listingData.price?.currency,
+            priceDecimal,
+          }; // Format to ETH
         } catch (error) {
           console.error("Failed to fetch best listing:", error);
           return "N/A";
@@ -69,6 +74,7 @@ export default function NFTDetail() {
             data.nft.collection,
             data.nft.identifier
           );
+          console.log(data, "--- data---");
           setNftData({ ...data.nft, bestPrice: bestListing });
           setLoading(false);
         } catch (error) {
@@ -184,10 +190,16 @@ export default function NFTDetail() {
             <p className="mb-2 capitalize">
               <strong>Collection:</strong> {nftData.collection}
             </p>
-            <p className="mb-4">
+            <p className="mb-2">
               <strong>Description:</strong>{" "}
               {nftData.description || "No description available."}
             </p>
+            {nftData.bestPrice && (
+              <p className="mb-4">
+                <strong>Price:</strong> {nftData.bestPrice?.bestPrice}{" "}
+                {nftData.bestPrice?.priceCurrency}
+              </p>
+            )}
             {/* Add more details as needed */}
             {nftData.bestPrice && nftData.bestPrice !== "N/A" ? (
               <button
